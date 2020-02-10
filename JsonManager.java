@@ -1,8 +1,25 @@
+/*
+ * File: JsonManager.java
+ * Name: Andrei Pak
+ * Date: Feb 10, 2020
+ * Desc: Class that produces an object to handle JSON data string or file into node object tree that is more 
+ * 			managable then the string or file it self. 
+ * 			By parsing the JSON data in a string format it finds key characters of the data that signify 
+ * 			keys, values, object, arrays and delimeters in order split the JSON data string a manageble part
+ * 			one at a time as it loads it into node objects by adding key and values and then inserting it into
+ * 			the node tree in the way the JSON data is designed to hold its data, in essence to simulating
+ * 			its design.
+ * 			More functions will be added with more use that this class will have.
+ * Usage: Will create an object to parse and create a node object tree from a JSON data string/file in order
+ * 			to have ease accessing JSON data, with functions to select containers or keys, and retrive its
+ * 			children pairs or values of selected keys.	
+ */
+
 
 
 import utilities.Utils;
 
-public class Json {
+public class JsonManager {
 	Utils u = new Utils();
 	//FIELDS FOR PARSING JSON STRING
 	private String in;		//Initial and main string that will contain the entrie Json data.
@@ -19,7 +36,7 @@ public class Json {
 	
 	//CONSTRUCTOR
 	//Initilized with Json data holding string to initialize data work with, then processing through it.
-	public Json(String in) {
+	public JsonManager(String in) {
 		this.in = in;
 		stringToTree();
 		//root.printConts();
@@ -59,9 +76,7 @@ public class Json {
 				else {
 					if (gotArr) gotArr = false;
 					node.setVal(fChar);
-					cur.addChild(node);
-					cur = node;
-					newNode();
+					setChildAsParent();
 				}
 				
 			}
@@ -78,11 +93,9 @@ public class Json {
 				 * of current, then setting current to the node in question. Resetting node.
 				 */
 				if (str.length() == 1) {
-					gotArr = true;
 					node.setVal(fChar);
-					cur.addChild(node);
-					cur = node;
-					newNode();
+					gotArr = true;
+					setChildAsParent();
 				}
 				/* If the 2nd character is a closing square brackets indicating an empty array
 				 * thus proccessing both opening and closing brackets as a val of the node,
@@ -127,6 +140,12 @@ public class Json {
 	// then resetting node in question.
 	private void setChild() {
 		cur.addChild(node);
+		newNode();
+	}
+	
+	private void setChildAsParent() {
+		cur.addChild(node);
+		cur = node;
 		newNode();
 	}
 	
